@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Calculadora de Derivadas e Integrales</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    </head>
+    <body>
+        <nav class="navbar bg-body-tertiary" data-bs-theme="dark">
+            <div class="container-fluid">
+              <span class="navbar-brand mb-0 h1">Calculadora de Derivadas e Integrales - Crystal</span>
+            </div>
+        </nav>
+
+        <div class="container mt-4"">
+            <h2>Calcular Derivada</h2>
+        
+            <div class="row">
+                <!-- Columna para el formulario -->
+                <div class="col-md-6">
+                    <form id="formulario" method="POST" class="form-floating">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="dFunction" class="form-label">Función:</label>
+                            <input type="text" class="form-control" id="dFunction" placeholder="Ejemplo: x*2+3" name="functionDerivada">
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <div class="btn-group d-grid gap-2" style="grid-template-columns: repeat(7, 1fr);">
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('+', 'dFunction')">+</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('-', 'dFunction')">-</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('*', 'dFunction')">*</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('/', 'dFunction')">/</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('**', 'dFunction')">^</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('sqrt()', 'dFunction')">√</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('pi', 'dFunction')">π</button>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <div class="btn-group d-grid gap-2" style="grid-template-columns: repeat(7, 1fr);">
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('sin()', 'dFunction')" >sen(x)</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('cos()', 'dFunction')">cos(x)</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('tan()', 'dFunction')">tan(x)</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('csc()', 'dFunction')">csc(x)</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('sec()', 'dFunction')">sec(x)</button>
+                                    <button class="btn btn-primary" type="button"  onclick="agregarCaracterConCursor('cot()', 'dFunction')">cot(x)</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('exp()', 'dFunction')">e</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="d-grid gap-2 mt-2">
+                            <button type="submit" name="calcularDerivadaBtn" id="calcularDerivadaBtn" class="btn btn-primary" onclick="enviarFormulario('formulario')">Calcular Derivada</button>
+                        </div>
+                    </form>
+
+                    <div class="row mt-4 bg-secondary rounded p-3">
+                        <div class="col-md-6">
+                            <p class="resultado text-white"><b>Resultado:</b></p>
+                            <p class="text-white">La función f(x) es:</p>
+                            <p class="text-white">La derivada de la función es: </p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-secondary rounded p-3">
+                                <br>
+                                {% if derivative_result %}
+                                    <p class="text-white"><b>`{{f_derivada}}`</b></p>
+                                    <p class="text-white"><b>`{{derivative_result}}`</b></p>
+                                {% else %}
+                                <p></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- Columna para el mensaje y la imagen -->
+                <div class="col-md-6 d-flex flex-column">
+                    <div class="card-group flex-fill">
+                        <div class="card">
+                          <img src="../static/images/simbolos.jpg" class="card-img-top" alt="...">
+                          <div class="card-body">
+                            <h5 class="card-title">Símbolos y operaciones matemáticas</h5>
+                            <p class="card-text">Al escribir la función se deben tener en cuenta los simbolos y operadores matemáticos, así como los parentésis necesarios.</p>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <img src="../static/images/comparacion.jpg" class="card-img-top" alt="...">
+                          <div class="card-body">
+                            <h5 class="card-title">Comparación de entrada y salida</h5>
+                            <p class="card-text">En la imagen se puede ver la diferencia de como debe ser escrita la función. Utilice los botones para poder introducir una mejor entrada.</p>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="container mt-4"">
+            <h2>Calcular Integral Indefinida</h2>
+
+            <div class="row">
+
+                <!-- Columna para el formulario -->
+                <div class="col-md-6">
+                    <form id="formulario2" method="POST" class="form-floating">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="iFunction" class="form-label">Función:</label>
+                            <input type="text" class="form-control" id="intIndefinidaFunction" placeholder="Ejemplo: x*6+x**2+3" name="functionIntegralIndefinida">
+                        </div>
+
+
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <div class="btn-group d-grid gap-2" style="grid-template-columns: repeat(7, 1fr);">
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('+', 'intIndefinidaFunction')">+</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('-', 'intIndefinidaFunction')">-</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('*', 'intIndefinidaFunction')">*</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('/', 'intIndefinidaFunction')">/</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('**', 'intIndefinidaFunction')">^</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('sqrt()', 'intIndefinidaFunction')">√</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('pi', 'intIndefinidaFunction')">π</button>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <div class="btn-group d-grid gap-2" style="grid-template-columns: repeat(7, 1fr);">
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('sin()', 'intIndefinidaFunction')" >sen(x)</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('cos()', 'intIndefinidaFunction')">cos(x)</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('tan()', 'intIndefinidaFunction')">tan(x)</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('csc()', 'intIndefinidaFunction')">csc(x)</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('sec()', 'intIndefinidaFunction')">sec(x)</button>
+                                    <button class="btn btn-primary" type="button"  onclick="agregarCaracterConCursor('cot()', 'intIndefinidaFunction')">cot(x)</button>
+                                    <button class="btn btn-primary" type="button" onclick="agregarCaracterConCursor('exp()', 'intIndefinidaFunction')">e</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="d-grid gap-2 mt-2">
+                            <button type="submit" name="calcularIntegralIndefinidaBtn"  id="calcularIntegralIndefinidaBtn" class="btn btn-primary" onclick="enviarFormulario('formulario2')">Calcular Integral Indefinida</button>
+                        </div>
+                    </form>
+
+                    <div class="row mt-4 bg-secondary rounded p-3">
+                        <div class="col-md-6">
+                            <p class="resultado text-white"><b>Resultado:</b></p>
+                            <p class="text-white">La función f(x) es:</p>
+                            <p class="text-white">La integral de la función es: </p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-secondary rounded p-3">
+                                <br>
+                                {% if integral_result %}
+                                    <p class="text-white"><b>`{{f_integralIndefinida}}`</b></p>
+                                    <p class="text-white"><b>`{{integral_result}}`</b></p>
+                                {% else %}
+                                <p></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna para el mensaje y la imagen -->
+                <div class="col-md-6 d-flex flex-column">
+                    <div class="card-group flex-fill">
+                        <div class="card">
+                          <img src="../static/images/simbolos.jpg" class="card-img-top" alt="...">
+                          <div class="card-body">
+                            <h5 class="card-title">Símbolos y operaciones matemáticas</h5>
+                            <p class="card-text">Al escribir la función se deben tener en cuenta los simbolos y operadores matemáticos, así como los parentésis necesarios.</p>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <img src="../static/images/comparacion.jpg" class="card-img-top" alt="...">
+                          <div class="card-body">
+                            <h5 class="card-title">Comparación de entrada y salida</h5>
+                            <p class="card-text">En la imagen se puede ver la diferencia de como debe ser escrita la función. Utilice los botones para poder introducir una mejor entrada.</p>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script> 
+            const calcularDerivadaBtn = document.getElementById('derivadaBoton');
+            const derivadaForm = document.getElementById('formDerivada');
+
+            function enviarFormulario(boton){
+                var formulario = document.getElementById(formId);
+                formulario.submit();
+            }
+
+            function agregarCaracterConCursor(texto, campo) {
+			var campoInput = document.getElementById(campo);
+			var inicio = campoInput.selectionStart;
+			var fin = campoInput.selectionEnd;
+			var valorAnterior = campoInput.value;
+			campoInput.value = valorAnterior.substring(0, inicio) + texto + valorAnterior.substring(fin);
+			campoInput.setSelectionRange(inicio + texto.length, inicio + texto.length);
+			campoInput.focus();
+		}
+
+        </script>
+
+        <style>
+        /* Estilos generales */
+        /* ... */
+
+        /* Media query para pantallas pequeñas */
+        @media (max-width: 576px) {
+            .container {
+                padding: 10px;
+            }
+
+            .btn-group {
+                justify-content: center;
+            }
+        }
+
+        /* Media query para pantallas medianas y grandes */
+        @media (min-width: 577px) {
+           
+        }
+    </style>
+    </body>
+</html>
