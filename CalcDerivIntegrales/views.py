@@ -15,18 +15,26 @@ def calcular(request):
     if request.method == 'POST':
         if 'calcularDerivadaBtn' in request.POST:
             derivada_input = request.POST['functionDerivada']
-            f_derivada = sympify(derivada_input)
-            x = symbols('x')
-            derivada_resultado = diff(f_derivada, x)
-            derivada_resultado = latex(derivada_resultado)
-            f_LatexDerivada = latex(f_derivada)
+            try:
+                f_derivada = sympify(derivada_input)
+                x = symbols('x')
+                derivada_resultado = diff(f_derivada, x)
+                derivada_resultado = latex(derivada_resultado)
+                f_LatexDerivada = latex(f_derivada)
+            except SympifyError:
+                derivada_resultado = "Error: Función inválida"
+                f_LatexDerivada =  ""
         elif 'calcularIntegralIndefinidaBtn' in request.POST:
             integral_input = request.POST['functionIntegralIndefinida']
-            f_integralIndefinida = sympify(integral_input)
-            x = symbols('x')
-            integral_resultado = integrate(f_integralIndefinida, x)
-            integral_resultado = latex(integral_resultado)
-            f_LatexIntegralIndefinida = latex(f_integralIndefinida)
+            try:
+                f_integralIndefinida = sympify(integral_input)
+                x = symbols('x')
+                integral_resultado = integrate(f_integralIndefinida, x)
+                integral_resultado = latex(integral_resultado)
+                f_LatexIntegralIndefinida = latex(f_integralIndefinida)
+            except SympifyError:
+                integral_resultado = "Error: Función inválida"
+                f_LatexIntegralIndefinida =  ""
         
 
 
