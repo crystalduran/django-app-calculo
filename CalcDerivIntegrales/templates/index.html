@@ -228,7 +228,7 @@
                 const funcionMatematica = input.value;
 
                 // Verificar si la función matemática cumple con la expresión regular
-                if (/^[0-9x+\-*/^()sintancosinhcoshexplog\s.PI]+$/i.test(funcionMatematica)) {
+                if (/^[0-9x+\-*/^()sintancosinhcoshexplog\s.PIcscseccotsqrt]+$/i.test(funcionMatematica)) {
                     // Si la función matemática es válida, quitar el estilo inválido y permitir el envío del formulario
                     input.classList.remove("invalid-input");
                     formulario.submit();
