@@ -59,7 +59,7 @@
 
 
                         <div class="d-grid gap-2 mt-2">
-                            <button type="submit" name="calcularDerivadaBtn" id="calcularDerivadaBtn" class="btn btn-primary" onclick="enviarFormulario('formulario')">Calcular Derivada</button>
+                            <button type="submit" name="calcularDerivadaBtn" id="calcularDerivadaBtn" class="btn btn-primary" onclick="validarFuncion('dFunction', 'formulario') ">Calcular Derivada</button>
                         </div>
                     </form>
 
@@ -153,7 +153,7 @@
 
 
                         <div class="d-grid gap-2 mt-2">
-                            <button type="submit" name="calcularIntegralIndefinidaBtn"  id="calcularIntegralIndefinidaBtn" class="btn btn-primary" onclick="enviarFormulario('formulario2')">Calcular Integral Indefinida</button>
+                            <button type="submit" name="calcularIntegralIndefinidaBtn"  id="calcularIntegralIndefinidaBtn" class="btn btn-primary" onclick="validarFuncion('intIndefinidaFunction', 'formulario2') ">Calcular Integral Indefinida</button>
                         </div>
                     </form>
 
@@ -204,20 +204,43 @@
             const calcularDerivadaBtn = document.getElementById('derivadaBoton');
             const derivadaForm = document.getElementById('formDerivada');
 
-            function enviarFormulario(boton){
+        
+
+            function enviarFormulario(formId){
                 var formulario = document.getElementById(formId);
-                formulario.submit();
+               formulario.submit();
+                
             }
 
             function agregarCaracterConCursor(texto, campo) {
-			var campoInput = document.getElementById(campo);
-			var inicio = campoInput.selectionStart;
-			var fin = campoInput.selectionEnd;
-			var valorAnterior = campoInput.value;
-			campoInput.value = valorAnterior.substring(0, inicio) + texto + valorAnterior.substring(fin);
-			campoInput.setSelectionRange(inicio + texto.length, inicio + texto.length);
-			campoInput.focus();
-		}
+                var campoInput = document.getElementById(campo);
+                var inicio = campoInput.selectionStart;
+                var fin = campoInput.selectionEnd;
+                var valorAnterior = campoInput.value;
+                campoInput.value = valorAnterior.substring(0, inicio) + texto + valorAnterior.substring(fin);
+                campoInput.setSelectionRange(inicio + texto.length, inicio + texto.length);
+                campoInput.focus();
+            }
+
+            function validarFuncion(inputId, formId) {
+                const input = document.getElementById(inputId);
+                var formulario = document.getElementById(formId);
+                const funcionMatematica = input.value;
+
+                // Verificar si la función matemática cumple con la expresión regular
+                if (/^[0-9x+\-*/^()sintancosinhcoshexplog\s.PIcscseccotsqrt]+$/i.test(funcionMatematica)) {
+                    // Si la función matemática es válida, quitar el estilo inválido y permitir el envío del formulario
+                    input.classList.remove("invalid-input");
+                    formulario.submit();
+                } else {
+                    // Si la función matemática no es válida, aplicar el estilo inválido y evitar el envío del formulario
+                    input.classList.add("invalid-input");
+                    alert("La función matemática no es válida. Solo se permiten números, el caracter 'x', y funciones como 'sin', 'cos', 'tan', 'cosh', 'sinh', 'exp', 'log', así como '**' para la potencia.");
+                    formulario.onsubmit = function(event) {
+                    event.preventDefault(); // Detener el envío del formulario
+                    };
+                }
+            }
 
         </script>
 
